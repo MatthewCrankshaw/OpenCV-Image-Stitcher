@@ -41,6 +41,7 @@ int main(int argc, char ** argv)
     matcher.getHomographyORB(original_1, original_2, matches, h);
 
     cv::imshow("matches", matches);
+    cv::imwrite("ORB_goodmatches.jpg", matches);
 
     cv::waitKey(0);
     return 0;
