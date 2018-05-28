@@ -1,6 +1,7 @@
 # depslib dependency file v1.0
-1527457533 source:/home/matthew/Documents/Uni/Computer Vision/mini_project/src/main.cpp
+1527466136 source:/home/matthew/Documents/Uni/Computer Vision/mini_project/src/main.cpp
 	<iostream>
+	<opencv2/opencv.hpp>
 	<opencv2/core/core.hpp>
 	<opencv2/highgui/highgui.hpp>
 	<opencv2/features2d.hpp>
