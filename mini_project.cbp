@@ -35,9 +35,12 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add directory="include" />
 		</Compiler>
+		<Unit filename="include/feature_matcher.h" />
 		<Unit filename="res/1.jpg" />
 		<Unit filename="res/2.jpg" />
+		<Unit filename="src/feature_matcher.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Extensions>
 			<code_completion />
