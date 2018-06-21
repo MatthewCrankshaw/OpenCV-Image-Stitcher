@@ -27,7 +27,7 @@ void feature_matcher::getHomographySURF(const Mat &src1, const Mat &src2, int pa
 
     clock_t start;
     start = clock();
-    Ptr<SURF> surf = SURF::create(param);
+    Ptr<SURF> surf = SURF::create(param, 4, 3, false, false);
     surf->detectAndCompute(gray1, Mat(), keypoints1, descriptors1);
     surf->detectAndCompute(gray2, Mat(), keypoints2, descriptors2);
     float t = (clock() - start) / (double)(CLOCKS_PER_SEC / 1000);
@@ -36,12 +36,10 @@ void feature_matcher::getHomographySURF(const Mat &src1, const Mat &src2, int pa
     matchFeaturesFLANN(matches, false);
 
     int s =0;
-    for(int i = 0; i < matches.size(); i++){
-        s += matches[i].size();
-    }
+    s = keypoints1.size() + keypoints2.size();
 
     timeData += to_string(t) + "\n";
-    matchData += to_string(s) + "\n";
+    keypointData += to_string(s) + "\n";
 
     drawMatches(resize1, keypoints1, resize2, keypoints2, matches, mtchs);
 }
@@ -58,7 +56,7 @@ void feature_matcher::getHomographySIFT(const Mat &src1, const Mat &src2, int pa
 
     clock_t start;
     start = clock();
-    Ptr<SIFT> sift = SIFT::create(param);
+    Ptr<SIFT> sift = SIFT::create(param, 3, 0.04, 10, 1.6);
     sift->detectAndCompute(gray1, Mat(), keypoints1, descriptors1);
     sift->detectAndCompute(gray2, Mat(), keypoints2, descriptors2);
     float t = (clock() - start) / (double)(CLOCKS_PER_SEC / 1000);
@@ -66,13 +64,11 @@ void feature_matcher::getHomographySIFT(const Mat &src1, const Mat &src2, int pa
     vector<vector<DMatch> > matches;
     matchFeaturesFLANN(matches, false);
 
-    int s =0;
-    for(int i = 0; i < matches.size(); i++){
-        s += matches[i].size();
-    }
+    int s = keypoints1.size() + keypoints2.size();
+
 
     timeData += to_string(t) + "\n";
-    matchData += to_string(s) + "\n";
+    keypointData += to_string(s) + "\n";
 
     drawMatches(resize1, keypoints1, resize2, keypoints2, matches, mtchs);
 }
@@ -90,7 +86,7 @@ void feature_matcher::getHomographyORB(const Mat &src1, const Mat &src2, int par
 
     clock_t start;
     start = clock();
-    Ptr<ORB> detector = ORB::create(param);
+    Ptr<ORB> detector = ORB::create(param, 1.2, 8, 31, 0, 2, 31, 20);
     detector->detectAndCompute(gray1, Mat(), keypoints1, descriptors1);
     detector->detectAndCompute(gray2, Mat(), keypoints2, descriptors2);
     float t = (clock() - start) / (double)(CLOCKS_PER_SEC / 1000);
@@ -98,13 +94,11 @@ void feature_matcher::getHomographyORB(const Mat &src1, const Mat &src2, int par
     vector<vector<DMatch> > matches;
     matchFeaturesFLANN(matches, true);
 
-    int s =0;
-    for(int i = 0; i < matches.size(); i++){
-        s += matches[i].size();
-    }
+    int s = keypoints1.size() + keypoints2.size();
+
 
     timeData += to_string(t) + "\n";
-    matchData += to_string(s) + "\n";
+    keypointData += to_string(s) + "\n";
 
     drawMatches(resize1, keypoints1, resize2, keypoints2, matches, mtchs);
 
@@ -127,7 +121,7 @@ void feature_matcher::matchFeaturesFLANN(vector<vector<DMatch> > &matches, bool 
 
     sort(matches.begin(), matches.end());
 
-    const int goodMatches = matches.size() * 0.05f;
+    const int goodMatches = matches.size() * 1.0f;
     matches.erase(matches.begin()+goodMatches, matches.end());
 }
 
@@ -137,7 +131,7 @@ void feature_matcher::matchFeaturesBruteForce(vector<DMatch> &matches){
 
     sort(matches.begin(), matches.end());
 
-    const int goodMatches = matches.size() * 0.02f;
+    const int goodMatches = matches.size() * 1.00f;
 
 //    double max_dist = 0;
 //    double min_dist = 100;
@@ -159,6 +153,6 @@ void feature_matcher::writeDataFile(){
     fstream fs;
     fs.open("test.txt", fstream::out);
     fs << timeData;
-    fs << matchData;
+    fs << keypointData;
     fs.close();
 }

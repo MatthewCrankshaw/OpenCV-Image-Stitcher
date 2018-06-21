@@ -28,7 +28,7 @@ class feature_matcher
         Mat descriptors1, descriptors2;
         vector<KeyPoint> keypoints1, keypoints2;
         string timeData;
-        string matchData;
+        string keypointData;
 
         int imgWidth, imgHeight;
 
