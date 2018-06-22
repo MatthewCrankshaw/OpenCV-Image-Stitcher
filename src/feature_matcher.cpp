@@ -15,7 +15,7 @@ feature_matcher::~feature_matcher()
     //dtor
 }
 
-void feature_matcher::getHomographySURF(const Mat &src1, const Mat &src2, int param, Mat &mtchs, Mat &h){
+void feature_matcher::getMatchesSURF(const Mat &src1, const Mat &src2, int param, Mat &mtchs){
     Mat resize1, resize2;
     Mat gray1, gray2;
     //resize image -- only for testing purposes
@@ -44,7 +44,7 @@ void feature_matcher::getHomographySURF(const Mat &src1, const Mat &src2, int pa
     drawMatches(resize1, keypoints1, resize2, keypoints2, matches, mtchs);
 }
 
-void feature_matcher::getHomographySIFT(const Mat &src1, const Mat &src2, int param, Mat &mtchs, Mat &h){
+void feature_matcher::getMatchesSIFT(const Mat &src1, const Mat &src2, int param, Mat &mtchs){
     Mat resize1, resize2;
     Mat gray1, gray2;
     //resize image -- only for testing purposes
@@ -73,7 +73,7 @@ void feature_matcher::getHomographySIFT(const Mat &src1, const Mat &src2, int pa
     drawMatches(resize1, keypoints1, resize2, keypoints2, matches, mtchs);
 }
 
-void feature_matcher::getHomographyORB(const Mat &src1, const Mat &src2, int param, Mat &mtchs, Mat &h){
+void feature_matcher::getMatchesORB(const Mat &src1, const Mat &src2, int param, Mat &mtchs){
     Mat resize1, resize2;
     Mat gray1, gray2;
 
@@ -101,14 +101,6 @@ void feature_matcher::getHomographyORB(const Mat &src1, const Mat &src2, int par
     keypointData += to_string(s) + "\n";
 
     drawMatches(resize1, keypoints1, resize2, keypoints2, matches, mtchs);
-
-//    vector<Point2f> points1, points2;
-//    for(size_t i = 0; i < matches.size(); i++){
-//        points1.push_back(keypoints1[matches[i].queryIdx].pt);
-//        points2.push_back(keypoints2[matches[i].trainIdx].pt);
-//    }
-
-    //h = findHomography(points1, points2, RANSAC);
 
 }
 

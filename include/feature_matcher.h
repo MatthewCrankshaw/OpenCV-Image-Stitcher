@@ -16,9 +16,9 @@ class feature_matcher
     public:
         feature_matcher(int width, int height);
         virtual ~feature_matcher();
-        void getHomographySURF(const Mat &src1, const Mat &src2, int param, Mat &mtchs, Mat& h);
-        void getHomographySIFT(const Mat &src1, const Mat &src2, int param, Mat &mtchs, Mat& h);
-        void getHomographyORB(const Mat &src1, const Mat &src2, int param, Mat &matches, Mat&h);
+        void getMatchesSURF(const Mat &src1, const Mat &src2, int param, Mat &mtchs);
+        void getMatchesSIFT(const Mat &src1, const Mat &src2, int param, Mat &mtchs);
+        void getMatchesORB(const Mat &src1, const Mat &src2, int param, Mat &matches);
 
         void writeDataFile();
 

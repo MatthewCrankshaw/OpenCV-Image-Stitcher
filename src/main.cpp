@@ -13,9 +13,8 @@ using namespace cv::xfeatures2d;
 
 #define WINDOW_SIZE 600
 
-//#define MODE 1
-#define MODE 2
-//#define MODE 3
+#define MODE 1
+//#define MODE 2
 
 int slider_max;
 int slider;
@@ -26,9 +25,7 @@ vector<Mat> img1, img2, orig1, orig2;
 
 void on_trackbar(int, void *){
     #if(MODE == 1)
-//    imshow("imgLeft", leftImgs[slider]);
-//    imshow("imgRight", rightImgs[slider]);
-//    imshow("matchedImg", matchedImgs[slider]);
+    imshow("matchedImg", matchedImgs[slider]);
     #elif(MODE == 2)
         imshow("window", img1[slider]);
         imshow("img1", orig1[slider]);
@@ -38,16 +35,13 @@ void on_trackbar(int, void *){
 
 int main(int argc, char ** argv)
 {
+
+    //mode for testing the feature matching and feature detecting algorithms
     if(MODE == 1){
         vector<String> filenamesRight, filenamesLeft;
         slider = 0;
-
-        cv::namedWindow("imgLeft", 0);
-        cv::namedWindow("imgRight", 0);
         cv::namedWindow("matchedImg", 0);
 
-        cv::resizeWindow("imgLeft", WINDOW_SIZE, WINDOW_SIZE);
-        cv::resizeWindow("imgRight", WINDOW_SIZE, WINDOW_SIZE);
         cv::resizeWindow("matchedImg", WINDOW_SIZE, WINDOW_SIZE);
 
         string path1 = "res/left/*", path2 = "res/right/*";
@@ -86,11 +80,14 @@ int main(int argc, char ** argv)
        feature_matcher matcher = feature_matcher(1080, 1920);
 
         for(size_t i = 0; i < filenamesLeft.size(); i++){
-            Mat matched, h1;
-            matcher.getHomographySIFT(img1[i], img2[i], 1000, matched, h1);
+            Mat matched;
+            matcher.getMatchesSIFT(img1[i], img2[i], 1000, matched);
+            //matcher.getMatchesORB(img1[i], img2[i], 1000, matched);
+            //matcher.getMatchesSURF(img1[i], img2[i], 10000, matched);
             matchedImgs.push_back(matched);
             cout << "Detecting features for: " << i << endl;
         }
+
         matcher.writeDataFile();
 
 
@@ -100,11 +97,10 @@ int main(int argc, char ** argv)
         createTrackbar(trackbarName, "imgLeft", &slider, slider_max, on_trackbar);
         on_trackbar(slider, 0);
 
-        //imwrite("stitch.jpg", matchedImgs[2]);
-
         cv::waitKey(0);
     }
 
+    //Mode for image stitching
     if(MODE == 2){
         //setup windows
         namedWindow("window", 0);
