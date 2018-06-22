@@ -117,6 +117,8 @@ int main(int argc, char ** argv)
         vector<String> filenamesRight, filenamesLeft;
         slider = 0;
 
+        vector<float> times;
+
         //get all of the filenames
         string path1 = "res/left/*", path2 = "res/right/*";
         glob(path1, filenamesLeft, true);
@@ -155,9 +157,9 @@ int main(int argc, char ** argv)
         //slider max should be the maximum number  of images
         slider_max =  filenamesLeft.size()-1;
 
-        Ptr<Feature2D> f2d = xfeatures2d::SIFT::create(500, 3, 0.04, 10, 1.6);
-        //Ptr<Feature2D> f2d = xfeatures2d::SURF::create(500, 4, 3, false, false);
-        //Ptr<Feature2D> f2d = ORB::create(5000);
+        //Ptr<Feature2D> f2d = xfeatures2d::SIFT::create(5000, 3, 0.04, 10, 1.6);
+        Ptr<Feature2D> f2d = xfeatures2d::SURF::create(1500, 4, 3, false, false);
+        //Ptr<Feature2D> f2d = ORB::create(10000);
 
         //loop though all images
         for(int i = 0; i < filenamesLeft.size(); i++){
@@ -177,6 +179,9 @@ int main(int argc, char ** argv)
             Mat reszImg = (Mat_<double>(2,3) << 1, 0, offsetx, 0, 1, offsety);
             warpAffine(img1[i], img1[i], reszImg, Size(2*img1[i].cols, 1.2*img1[i].rows));
 
+            clock_t start;
+            start = clock();
+
             cout << "INFO: Detected Keypoints for " << i << endl;
             vector<KeyPoint> keypoints1, keypoints2;
             f2d->detect(img1[i], keypoints1);
@@ -186,6 +191,10 @@ int main(int argc, char ** argv)
             Mat descriptors1, descriptors2;
             f2d->compute(img1[i], keypoints1, descriptors1);
             f2d->compute(img2[i], keypoints2, descriptors2);
+
+            float t = (clock() - start) / (double)(CLOCKS_PER_SEC / 100);
+            cout << "Time taken " << t << endl;
+            times.push_back(t);
 
             cout << "INFO: Matched descriptors for " << i << endl;
             BFMatcher matcher;
@@ -237,6 +246,13 @@ int main(int argc, char ** argv)
             }
 
         }
+        float ave = 0;
+        float total = 0;
+        for(auto t: times){
+            total += t;
+        }
+        ave = total /30;
+        cout << "Average time: " << ave << endl;
 
         char trackbarName[50];
         sprintf(trackbarName, "Image: %d", slider_max);
