@@ -1,9 +1,11 @@
 #include <iostream>
+#include <vector>
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/features2d.hpp>
 #include <opencv2/xfeatures2d.hpp>
+#include <opencv2/xfeatures2d/nonfree.hpp>
 
 #include "feature_matcher.h"
 
@@ -13,23 +15,23 @@ using namespace cv::xfeatures2d;
 
 #define WINDOW_SIZE 600
 
-#define MODE 1
-//#define MODE 2
+//#define MODE 1
+#define MODE 2
 
 int slider_max;
 int slider;
 
 vector<Mat> leftImgs, rightImgs, matchedImgs;
 
-vector<Mat> img1, img2, orig1, orig2;
+std::vector<cv::Mat> img1, img2, orig1, orig2;
 
 void on_trackbar(int, void *){
     #if(MODE == 1)
     imshow("matchedImg", matchedImgs[slider]);
     #elif(MODE == 2)
-        imshow("window", img1[slider]);
-        imshow("img1", orig1[slider]);
-        imshow("img2", orig2[slider]);
+        cv::imshow("window", img1[slider]);
+        cv::imshow("img1", orig1[slider]);
+        cv::imshow("img2", orig2[slider]);
     #endif // MODE
 }
 
@@ -40,9 +42,9 @@ int main(int argc, char ** argv)
     if(MODE == 1){
         vector<String> filenamesRight, filenamesLeft;
         slider = 0;
-        cv::namedWindow("matchedImg", 0);
+        namedWindow("matchedImg", 0);
 
-        cv::resizeWindow("matchedImg", WINDOW_SIZE, WINDOW_SIZE);
+        resizeWindow("matchedImg", WINDOW_SIZE, WINDOW_SIZE);
 
         string path1 = "res/left/*", path2 = "res/right/*";
         glob(path1, filenamesLeft, true);
@@ -103,12 +105,12 @@ int main(int argc, char ** argv)
     //Mode for image stitching
     if(MODE == 2){
         //setup windows
-        namedWindow("window", 0);
-        namedWindow("img1", 0);
-        namedWindow("img2", 0);
-        resizeWindow("window", Size(600, 600));
-        resizeWindow("img1", Size(600, 600));
-        resizeWindow("img2", Size(600, 600));
+        cv::namedWindow("window", 0);
+        cv::namedWindow("img1", 0);
+        cv::namedWindow("img2", 0);
+        cv::resizeWindow("window", cv::Size(600, 600));
+        cv::resizeWindow("img1", cv::Size(600, 600));
+        cv::resizeWindow("img2", cv::Size(600, 600));
 
         vector<String> filenamesRight, filenamesLeft;
         slider = 0;
@@ -154,8 +156,8 @@ int main(int argc, char ** argv)
         slider_max =  filenamesLeft.size()-1;
 
         //Ptr<Feature2D> f2d = xfeatures2d::SIFT::create(5000, 3, 0.04, 10, 1.6);
-        Ptr<Feature2D> f2d = xfeatures2d::SURF::create(1500, 4, 3, false, false);
-        //Ptr<Feature2D> f2d = ORB::create(10000);
+        //Ptr<Feature2D> f2d = xfeatures2d::SURF::create(1500, 4, 3, false, false);
+        Ptr<Feature2D> f2d = ORB::create(10000);
 
         //loop though all images
         for(int i = 0; i < filenamesLeft.size(); i++){
@@ -224,7 +226,7 @@ int main(int argc, char ** argv)
                 source_pts.push_back(keypoints2[it->trainIdx].pt);
             }
 
-            Mat H = findHomography(source_pts, dst_pts, CV_RANSAC);
+            Mat H = findHomography(source_pts, dst_pts, RANSAC);
             cout << "INFO: Found Homography for " << i << " : " << H << endl;
 
             Mat wim2;

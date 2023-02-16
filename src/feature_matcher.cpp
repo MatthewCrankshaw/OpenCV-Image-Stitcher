@@ -1,7 +1,6 @@
 #include "feature_matcher.h"
 #include<opencv2/xfeatures2d.hpp>
 
-
 using namespace cv::xfeatures2d;
 
 feature_matcher::feature_matcher(int width, int height)
@@ -15,34 +14,34 @@ feature_matcher::~feature_matcher()
     //dtor
 }
 
-void feature_matcher::getMatchesSURF(const Mat &src1, const Mat &src2, int param, Mat &mtchs){
-    Mat resize1, resize2;
-    Mat gray1, gray2;
-    //resize image -- only for testing purposes
-    resize(src1, resize1, Size(imgWidth, imgHeight), 0, 0, INTER_LINEAR);
-    resize(src2, resize2, Size(imgWidth, imgHeight), 0, 0, INTER_LINEAR);
-    //convert to grayscale
-    cvtColor(resize1, gray1, CV_BGR2GRAY);
-    cvtColor(resize2, gray2, CV_BGR2GRAY);
-
-    clock_t start;
-    start = clock();
-    Ptr<SURF> surf = SURF::create(param, 4, 3, false, false);
-    surf->detectAndCompute(gray1, Mat(), keypoints1, descriptors1);
-    surf->detectAndCompute(gray2, Mat(), keypoints2, descriptors2);
-    float t = (clock() - start) / (double)(CLOCKS_PER_SEC / 1000);
-
-    vector<vector<DMatch> > matches;
-    matchFeaturesFLANN(matches, false);
-
-    int s =0;
-    s = keypoints1.size() + keypoints2.size();
-
-    timeData += to_string(t) + "\n";
-    keypointData += to_string(s) + "\n";
-
-    drawMatches(resize1, keypoints1, resize2, keypoints2, matches, mtchs);
-}
+//void feature_matcher::getMatchesSURF(const Mat &src1, const Mat &src2, int param, Mat &mtchs){
+//    Mat resize1, resize2;
+//    Mat gray1, gray2;
+//    //resize image -- only for testing purposes
+//    resize(src1, resize1, Size(imgWidth, imgHeight), 0, 0, INTER_LINEAR);
+//    resize(src2, resize2, Size(imgWidth, imgHeight), 0, 0, INTER_LINEAR);
+//    //convert to grayscale
+//    cvtColor(resize1, gray1, COLOR_BGRA2GRAY);
+//    cvtColor(resize2, gray2, COLOR_BGRA2GRAY);
+//
+//    clock_t start;
+//    start = clock();
+//    Ptr<SURF> surf = SURF::create(param, 4, 3, false, false);
+//    surf->detectAndCompute(gray1, Mat(), keypoints1, descriptors1);
+//    surf->detectAndCompute(gray2, Mat(), keypoints2, descriptors2);
+//    float t = (clock() - start) / (double)(CLOCKS_PER_SEC / 1000);
+//
+//    vector<vector<DMatch> > matches;
+//    matchFeaturesFLANN(matches, false);
+//
+//    int s =0;
+//    s = keypoints1.size() + keypoints2.size();
+//
+//    timeData += to_string(t) + "\n";
+//    keypointData += to_string(s) + "\n";
+//
+//    drawMatches(resize1, keypoints1, resize2, keypoints2, matches, mtchs);
+//}
 
 void feature_matcher::getMatchesSIFT(const Mat &src1, const Mat &src2, int param, Mat &mtchs){
     Mat resize1, resize2;
@@ -51,8 +50,8 @@ void feature_matcher::getMatchesSIFT(const Mat &src1, const Mat &src2, int param
     resize(src1, resize1, Size(imgWidth, imgHeight), 0, 0, INTER_LINEAR);
     resize(src2, resize2, Size(imgWidth, imgHeight), 0, 0, INTER_LINEAR);
     //convert to grayscale
-    cvtColor(resize1, gray1, CV_BGR2GRAY);
-    cvtColor(resize2, gray2, CV_BGR2GRAY);
+    cvtColor(resize1, gray1, COLOR_BGRA2GRAY);
+    cvtColor(resize2, gray2, COLOR_BGRA2GRAY);
 
     clock_t start;
     start = clock();
@@ -73,36 +72,36 @@ void feature_matcher::getMatchesSIFT(const Mat &src1, const Mat &src2, int param
     drawMatches(resize1, keypoints1, resize2, keypoints2, matches, mtchs);
 }
 
-void feature_matcher::getMatchesORB(const Mat &src1, const Mat &src2, int param, Mat &mtchs){
-    Mat resize1, resize2;
-    Mat gray1, gray2;
-
-    //resize image -- only for testing purposes
-    resize(src1, resize1, Size(imgWidth, imgHeight), 0, 0, INTER_LINEAR);
-    resize(src2, resize2, Size(imgWidth, imgHeight), 0, 0, INTER_LINEAR);
-    //convert to grayscale
-    cvtColor(resize1, gray1, CV_BGR2GRAY);
-    cvtColor(resize2, gray2, CV_BGR2GRAY);
-
-    clock_t start;
-    start = clock();
-    Ptr<ORB> detector = ORB::create(param, 1.2, 8, 31, 0, 2, 31, 20);
-    detector->detectAndCompute(gray1, Mat(), keypoints1, descriptors1);
-    detector->detectAndCompute(gray2, Mat(), keypoints2, descriptors2);
-    float t = (clock() - start) / (double)(CLOCKS_PER_SEC / 1000);
-
-    vector<vector<DMatch> > matches;
-    matchFeaturesFLANN(matches, true);
-
-    int s = keypoints1.size() + keypoints2.size();
-
-
-    timeData += to_string(t) + "\n";
-    keypointData += to_string(s) + "\n";
-
-    drawMatches(resize1, keypoints1, resize2, keypoints2, matches, mtchs);
-
-}
+//void feature_matcher::getMatchesORB(const Mat &src1, const Mat &src2, int param, Mat &mtchs){
+//    Mat resize1, resize2;
+//    Mat gray1, gray2;
+//
+//    //resize image -- only for testing purposes
+//    resize(src1, resize1, Size(imgWidth, imgHeight), 0, 0, INTER_LINEAR);
+//    resize(src2, resize2, Size(imgWidth, imgHeight), 0, 0, INTER_LINEAR);
+//    //convert to grayscale
+//    cvtColor(resize1, gray1, COLOR_BGRA2GRAY);
+//    cvtColor(resize2, gray2, COLOR_BGRA2GRAY);
+//
+//    clock_t start;
+//    start = clock();
+//    Ptr<ORB> detector = ORB::create(param, 1.2, 8, 31, 0, 2, 31, 20);
+//    detector->detectAndCompute(gray1, Mat(), keypoints1, descriptors1);
+//    detector->detectAndCompute(gray2, Mat(), keypoints2, descriptors2);
+//    float t = (clock() - start) / (double)(CLOCKS_PER_SEC / 1000);
+//
+//    vector<vector<DMatch> > matches;
+//    matchFeaturesFLANN(matches, true);
+//
+//    int s = keypoints1.size() + keypoints2.size();
+//
+//
+//    timeData += to_string(t) + "\n";
+//    keypointData += to_string(s) + "\n";
+//
+//    drawMatches(resize1, keypoints1, resize2, keypoints2, matches, mtchs);
+//
+//}
 
 void feature_matcher::matchFeaturesFLANN(vector<vector<DMatch> > &matches, bool isORB){
     FlannBasedMatcher matcher;
