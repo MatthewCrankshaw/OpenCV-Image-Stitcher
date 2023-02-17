@@ -8,6 +8,7 @@
 #include <opencv2/xfeatures2d/nonfree.hpp>
 
 #include "feature_matcher.h"
+#include "ImageLoader.h"
 
 enum Mode {FEATURE, STITCH};
 
@@ -17,33 +18,33 @@ cv::Mat leftImg, rightImg, matchedImg;
 cv::Mat imageLeft, imageRight;
 cv::Mat originalLeft, originalRight;
 
-void featureMatchMode(cv::String filenameLeft, cv::String filenameRight);
+void featureMatchMode(cv::String filenameLeft, cv::String filenameRight, ImageLoader loader);
 
-void stitchImagesMode(cv::String filenameLeft, cv::String filenameRight);
+void stitchImagesMode(cv::String filenameLeft, cv::String filenameRight, ImageLoader loader);
 
 void createWindow(std::string name, int width = 600, int height = 600);
-
-void loadImage(cv::Mat &image, cv::String filename);
 
 void stitchImage(cv::Mat homography);
 
 int main(int argc, char ** argv)
 {
+    ImageLoader loader = ImageLoader();
+
     std::string left = "res/left/1.jpg", right = "res/right/1.jpg";
 
     if(mode == FEATURE) {
-        featureMatchMode(left, right);
+        featureMatchMode(left, right, loader);
     } else if(mode == STITCH) {
-        stitchImagesMode(left, right);
+        stitchImagesMode(left, right, loader);
     }
     return 0;
 }
 
-void featureMatchMode(cv::String filenameLeft, cv::String filenameRight) {
+void featureMatchMode(cv::String filenameLeft, cv::String filenameRight, ImageLoader loader) {
     createWindow("matchedImg");
 
-    loadImage(imageLeft, filenameLeft);
-    loadImage(imageRight, filenameRight);
+    imageLeft = loader.loadImage(filenameLeft);
+    imageRight = loader.loadImage(filenameRight);
 
     feature_matcher matcher = feature_matcher(1080, 1920);
 
@@ -54,21 +55,17 @@ void featureMatchMode(cv::String filenameLeft, cv::String filenameRight) {
     cv::waitKey(0);
 }
 
-void stitchImagesMode(cv::String filenameLeft, cv::String filenameRight) {
+void stitchImagesMode(cv::String filenameLeft, cv::String filenameRight, ImageLoader loader) {
     //setup windows
     createWindow("window");
     createWindow("img1");
     createWindow("img2");
 
-    loadImage(originalLeft, filenameLeft);
-    loadImage(originalRight, filenameRight);
+    originalLeft = loader.loadImage(filenameLeft);
+    originalRight = loader.loadImage(filenameRight);
 
     cv::Ptr<cv::Feature2D> f2d = cv::ORB::create(10000);
 
-    //make sure to push back an empty mat otherwise will segment fault
-    //imagesLeft.push_back(cv::Mat());
-    //imagesRight.push_back(cv::Mat());
-    //resize the image for efficiency
     resize(originalLeft, imageLeft, cv::Size(1080, 1920), 0, 0, cv::INTER_NEAREST);
     resize(originalRight, imageRight, cv::Size(1080, 1920), 0, 0, cv::INTER_NEAREST);
 
@@ -136,11 +133,6 @@ void stitchImagesMode(cv::String filenameLeft, cv::String filenameRight) {
 void createWindow(std::string name, int width, int height) {
     cv::namedWindow(name, 0);
     cv::resizeWindow(name, cv::Size(width, height));
-}
-
-void loadImage(cv::Mat &image, cv::String filename) {
-    image = cv::imread(filename, 1);
-    std::cout << "Loaded Image (" << filename << ")" << std::endl;
 }
 
 void stitchImage(cv::Mat homography) {

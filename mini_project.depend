@@ -831,7 +831,7 @@
 	<fstream>
 	<ctime>
 
-1676665980 source:/home/matthewc/git/OpenCV-Image-Stitcher/src/main.cpp
+1676668624 source:/home/matthewc/git/OpenCV-Image-Stitcher/src/main.cpp
 	<iostream>
 	<vector>
 	<opencv2/opencv.hpp>
@@ -841,4 +841,11 @@
 	<opencv2/xfeatures2d.hpp>
 	<opencv2/xfeatures2d/nonfree.hpp>
 	"feature_matcher.h"
+	"ImageLoader.h"
+
+1676668685 source:/home/matthewc/git/OpenCV-Image-Stitcher/src/ImageLoader.cpp
+	"ImageLoader.h"
+
+1676668689 /home/matthewc/git/OpenCV-Image-Stitcher/include/ImageLoader.h
+	<opencv2/opencv.hpp>
 
