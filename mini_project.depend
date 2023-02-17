@@ -820,11 +820,10 @@
 1513971981 /usr/local/include/opencv2/flann/flann.hpp
 	"opencv2/flann.hpp"
 
-1676533797 source:/home/matthewc/git/OpenCV-Image-Stitcher/src/feature_matcher.cpp
+1676611916 source:/home/matthewc/git/OpenCV-Image-Stitcher/src/feature_matcher.cpp
 	"feature_matcher.h"
-	<opencv2/xfeatures2d.hpp>
 
-1676533795 /home/matthewc/git/OpenCV-Image-Stitcher/include/feature_matcher.h
+1676611669 /home/matthewc/git/OpenCV-Image-Stitcher/include/feature_matcher.h
 	<opencv2/opencv.hpp>
 	<opencv2/core/core.hpp>
 	<opencv2/features2d/features2d.hpp>
@@ -832,7 +831,7 @@
 	<fstream>
 	<ctime>
 
-1676533643 source:/home/matthewc/git/OpenCV-Image-Stitcher/src/main.cpp
+1676665980 source:/home/matthewc/git/OpenCV-Image-Stitcher/src/main.cpp
 	<iostream>
 	<vector>
 	<opencv2/opencv.hpp>
@@ -840,5 +839,6 @@
 	<opencv2/highgui/highgui.hpp>
 	<opencv2/features2d.hpp>
 	<opencv2/xfeatures2d.hpp>
+	<opencv2/xfeatures2d/nonfree.hpp>
 	"feature_matcher.h"
 

@@ -8,32 +8,32 @@
 #include<fstream>
 #include<ctime>
 
-using namespace std;
-using namespace cv;
+//using namespace std;
+//using namespace cv;
 
 class feature_matcher
 {
     public:
         feature_matcher(int width, int height);
         virtual ~feature_matcher();
-        //void getMatchesSURF(const Mat &src1, const Mat &src2, int param, Mat &mtchs);
-        void getMatchesSIFT(const Mat &src1, const Mat &src2, int param, Mat &mtchs);
-        //void getMatchesORB(const Mat &src1, const Mat &src2, int param, Mat &matches);
+        //void getMatchesSURF(const cv::Mat &src1, const cv::Mat &src2, int param, cv::Mat &mtchs);
+        void getMatchesSIFT(const cv::Mat &src1, const cv::Mat &src2, int param, cv::Mat &mtchs);
+        //void getMatchesORB(const cv::Mat &src1, const cv::Mat &src2, int param, cv::Mat &Matches);
 
         void writeDataFile();
 
     protected:
 
     private:
-        Mat descriptors1, descriptors2;
-        vector<KeyPoint> keypoints1, keypoints2;
-        string timeData;
-        string keypointData;
+        cv::Mat descriptors1, descriptors2;
+        std::vector<cv::KeyPoint> keypoints1, keypoints2;
+        std::string timeData;
+        std::string keypointData;
 
         int imgWidth, imgHeight;
 
-        void matchFeaturesFLANN(vector<vector<DMatch> > &matches, bool isORB);
-        void matchFeaturesBruteForce(vector<DMatch> &matches);
+        void matchFeaturesFLANN(std::vector<std::vector<cv::DMatch> > &matches, bool isORB);
+        void matchFeaturesBruteForce(std::vector<cv::DMatch> &matches);
 };
 
 #endif // FEATURE_MATCHER_H
