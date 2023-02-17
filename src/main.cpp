@@ -20,11 +20,18 @@ std::vector<cv::Mat> imagesLeft, imagesRight;
 std::vector<cv::Mat> originalLeft, originalRight;
 
 void handleChangeTrackbar(int, void *);
+
 void featureMatchMode(std::vector<cv::String> filenamesLeft, std::vector<cv::String> filenamesRight);
+
 void stitchImagesMode(std::vector<cv::String> filenamesLeft, std::vector<cv::String> filenamesRight);
+
 void createWindow(std::string name, int width = 600, int height = 600);
+
 void loadImages(std::vector<cv::Mat> &images, std::vector<cv::String> filenames);
+
 void createTrackbar(int current, int last);
+
+void stitchImage(int index, cv::Mat homography);
 
 int main(int argc, char ** argv)
 {
@@ -164,23 +171,10 @@ void stitchImagesMode(std::vector<cv::String> filenamesLeft, std::vector<cv::Str
             source_pts.push_back(keypoints2[it->trainIdx].pt);
         }
 
-        cv::Mat H = findHomography(source_pts, dst_pts, cv::RANSAC);
-        std::cout << "INFO: Found Homography for " << i << " : " << H << std::endl;
+        cv::Mat homography = findHomography(source_pts, dst_pts, cv::RANSAC);
+        std::cout << "INFO: Found Homography for " << i << " : " << homography << std::endl;
 
-        cv::Mat wim2;
-        warpPerspective(imagesRight[i], wim2, H, imagesLeft[i].size());
-
-        //Nieve aproach at stitching together
-        for(int x = 0; x < imagesLeft[i].cols; x++){
-            for(int y = 0; y < imagesLeft[i].rows; y++){
-                cv::Vec3b colorimg1 = imagesLeft[i].at<cv::Vec3b>(cv::Point(x, y));
-                cv::Vec3b colorimg2 = wim2.at<cv::Vec3b>(cv::Point(x, y));
-                if(norm(colorimg1)==0){
-                    imagesLeft[i].at<cv::Vec3b>(cv::Point(x,y)) = colorimg2;
-                }
-            }
-        }
-
+        stitchImage(i, homography);
     }
 
     char trackbarName[50];
@@ -224,4 +218,20 @@ void createTrackbar(int current, int last) {
 
     cv::createTrackbar(trackbarName, "imgLeft", &current, lastImage, handleChangeTrackbar);
     handleChangeTrackbar(current, 0);
+}
+
+void stitchImage(int index, cv::Mat homography) {
+    cv::Mat wim2;
+    warpPerspective(imagesRight[index], wim2, homography, imagesLeft[index].size());
+
+    //Nieve aproach at stitching together
+    for(int x = 0; x < imagesLeft[index].cols; x++){
+        for(int y = 0; y < imagesLeft[index].rows; y++){
+            cv::Vec3b colorimg1 = imagesLeft[index].at<cv::Vec3b>(cv::Point(x, y));
+            cv::Vec3b colorimg2 = wim2.at<cv::Vec3b>(cv::Point(x, y));
+            if(norm(colorimg1)==0){
+                imagesLeft[index].at<cv::Vec3b>(cv::Point(x,y)) = colorimg2;
+            }
+        }
+    }
 }
